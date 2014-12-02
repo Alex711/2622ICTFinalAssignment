@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <meta charset="UTF-8">
+    <title>2622ICT DMS Final Assignment</title>
+
+    <!--jQuery-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <!--Bootstrap -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <!-- Javascript -->
+    <script src="js/controller.js"></script>
+    <script src="js/model-facebook.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/bootstrap3-typeahead.js"></script>
+
+    <!-- Lightbox / Jumbotron-->
+    <script src="lightbox/js/lightbox.min.js"></script>
+    <link href="lightbox/css/lightbox.css" rel="stylesheet" />
+    <link href="style/jumbotron.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">DMS Travel</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <form class="navbar-form navbar-right" role="form">
+                <ul class="nav nav-pills">
+                    <li class="active"><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="designDocument.html">Design Document</a></li>
+                    <li><div id ="btnLogin"><fb:login-button scope="public_profile,email, publish_actions" size="large" onlogin="checkLoginState();">
+                    </fb:login-button></div></li>
+                    <li><div id="fbLogout"><input type="image" src="logos/logoutv2.png" id="fbLogoutID"></div></li>
+                    <li><a href="#"><div id="loginName"></div></a></li>
+                </ul>
+
+            </form>
+        </div><!--/.navbar-collapse -->
+    </div>
+</div>
+
+<!-- Main jumbotron -->
+<div class="jumbotron">
+    <div class="container">
+        <div class="introPage">
+            <h1>DMS Travel</h1>
+            <div class="dmsDescription"><p></p></div>
+            <p><div id="btnView"><a class="btn btn-primary btn-lg" role="button">View Photos</a></div></p></div>
+
+    </div>
+</div>
+
+<div class="sortButtons" id = searchFields>
+
+    <div id="btnSortDesc"><button type="button" class="btn btn-info" id="btnSortDescID">Sort By Descending</button></div>
+
+    <div class="searchGroup">
+        <div class="col-lg-3">
+            <div class="input-group">
+                <div id="GoBackButton"><button type="button" class="btn btn-warning" id="btnGoBackID">Go Back <<</button></div>
+
+            </div>
+            <div class="input-group">
+                <span id="txtSearchField"><input type="text" class="form-control" data-provide="typeahead" id="searchText"></span>
+      <span class="input-group-btn">
+
+        <span id="searchButton"><button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search</button></span></div>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+<div id="airplaneCSS">
+
+    <img src="logos/airplane1.jpeg">
+</div>
+
+<div class="imagesArea" id="imageArea">
+
+    <figure>
+
+        <figcaption></figcaption>
+    </figure>
+
+</div>
+<hr>
+<div id="status">
+</div>
+<div class = "clearfix"> </div>
+
+</body>
+
+</html>

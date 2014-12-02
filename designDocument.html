@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Design Document 2622ICT Assignemnt</title>
+
+    <!--bootstrap-->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+    <!--jQuery-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <!--CSS-->
+    <link href="style/hover.css" rel="stylesheet" media="all">
+    <link href="jumbotron.css" rel="stylesheet">
+
+    <!--Javascript-->
+    <script src="js/controller.js"></script>
+    <script src="js/model-facebook.js"></script>
+    <script src="js/view.js"></script>
+
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">DMS Travel</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <form class="navbar-form navbar-right" role="form">
+                <ul class="nav nav-pills">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li class="active"><a href="designDocument.html">Design Document</a></li>
+                    <li><div id ="btnLogin"><fb:login-button scope="public_profile,email, publish_actions" size="large" onlogin="checkLoginState();">
+                    </fb:login-button></div></li>
+                    <li><div id="fbLogout"><input type="image" src="logos/logoutv2.png" id="fbLogoutID"></div></li>
+                    <li><a href="#"><div id="loginName"></div></a></li>
+                </ul>
+
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="jumbotron">
+    <div class="container">
+        <h1><br/>
+            Design Document for DMS Travel</h1>
+        <p>The following details the specific techniques that were used to create the design for DMS Travel. </p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Repetition</h2>
+            <p>Repetition has been used throughout the entire website to tie each page of the website together, to create a more
+                professional look and to overall create a nice and clean "feel" to the website.
+                <br/>
+                <br/>
+
+                Evidence of Repetition can be found in the navigation bar, colour schemes and button/link colour schemes
+            </p>
+        </div>
+        <div class="col-md-4">
+            <h2>Pattern</h2>
+            <p> To keep the image grid layout design in a certain format; Each grid is the same size and has the same background colour.
+            </p>
+        </div>
+        <div class="col-md-4">
+            <h2>Emphasis / Visual Hierarchy</h2>
+            <p>Emphasis has been an important principle in the design of this website;
+                As there can be many images, it is important to give emphasis to the images which are most important at the time
+                (eg Liking / Viewing a photo).
+                <br/>
+                <br/>
+                For example within the image display (grid layout) when a user has their mouse hovered on an image, the image automatically zooms in
+                as it is what the user is focusing on (most important at the time).
+                <br/>
+                <br/>
+
+                Another example is placement of buttons; The splashscreen page has the button placement closer to the centre and larger compared to other buttons
+                to create a visual hierarchy and emphasise that this is an important aspect of the website.
+
+            </p>
+        </div>
+    </div>
+
+    <hr>
+
+</div>
+
+
+
+</body>
+</html>

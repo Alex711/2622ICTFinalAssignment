@@ -1,0 +1,466 @@
+var dmsTravelID = 815157038515764;
+var photos = new Array();
+var usertoken;
+var username;
+
+var heronAlbumID;
+
+
+$(document).ready(function() {
+
+    var textInput = document.getElementById('#searchText');
+    document.getElementById("searchButton").onclick = searchObject;
+    document.getElementById("btnSortDescID").onclick = sortArrayDescending;
+
+    getPageDescription();
+
+    function getPageDescription() {
+        var descriptionURL = "https://graph.facebook.com/815157038515764";
+        $.get(descriptionURL, function (data) {
+            console.log(data.description);
+        });
+    }
+
+
+
+    $(".imagesArea").hide();
+    $("#searchFields").hide();
+    $("#goBackButton").hide();
+    $("#sideBarMenu").hide();
+
+    //FlickR stuff goes here.
+
+});
+
+$(document).on('click', '.btnDeleteID', function() {
+    var photoID = $(this).closest(".images").find("img").attr("id");
+    likePhoto(photoID);
+});
+
+function searchObject() {
+
+    var str = $("#searchText").val();
+    var strTrim = str.trim().toLowerCase();
+    var foundPhotos = [];
+    for (var i = 0; i < photos.length; i++) {
+
+        //console.log(photos[i].description.toLowerCase());
+        //-1 means not found.
+        //gets the description and converts to lowercase, and then checks it compared to the user input.
+        if (photos[i].description.toLowerCase().indexOf(strTrim) != -1) {
+
+            foundPhotos.push(photos[i]);
+            console.log(photos[i]);
+
+        }
+
+
+    }
+
+
+    displayPhotos(foundPhotos); // sends the foundStrings array to the btnSearchInput which accepts a foundStrings parameter
+}
+
+function likePhoto(id) {
+    var likesURL = "http://graph.facebook.com/" + id + "/likes";
+    $.get(likesURL, function(data) {
+
+        //if (!(data[0] in data)) {
+        if (data.data.length == 0) {
+
+            incrementLikeCounter(id);
+            console.log(data);
+        } else {
+
+
+
+//Unlike counter works, just not like counter.
+
+            /*for (var i = 0; i < data.data.length; i++) {
+             console.log(data.data[i].name);
+             console.log(username);
+             if (data.data[i].name == username) {
+
+             alert("You have already liked this photo. Unliked");
+             unlikePhoto(id);
+             console.log("testafterunlikne");
+
+             } else {
+             console.log("testttttt");
+
+             for (var x = 0; x < photos.length; x++) {
+             console.log("test");
+             if (photos[x].id == id) {
+             photos[x].likes = photos[x].likes + 1;
+             displayPhotos(photos);
+             }
+             }
+             }
+             }
+             });*/
+
+            for (var i = 0; i < data.data.length; i++) {
+                console.log(data);
+                console.log(photos[0].id);
+                console.log(data.data[i].name + " " + username);
+
+
+                if (data.data[i].name === username) {
+                    alert("You have already liked this photo. Unliked");
+                    var count = data.data.length;
+                    unlikePhoto(id, count);
+
+
+                } else /*if ()*/{
+                    console.log("testttttt");
+                    incrementLikeCounter(id);
+
+
+                }
+
+
+            }
+        }
+
+    });
+
+    function incrementLikeCounter(objectID) {
+        for (var i = 0; i < photos.length; i++) {
+            if (photos[i].id == objectID) {
+                photos[i].likes = photos[i].likes + 1;
+                displayPhotos(photos);
+            }
+
+        }
+    }
+
+    //ex ID: 816508248380643
+    var likeURL = "https://graph.facebook.com/" + id + "/likes?access_token=" + usertoken;
+    $.post(likeURL, function (data) {
+    })
+
+        .fail(function() {
+            alert("you need to be logged in. If the popup is blocked, please unblock it and login");
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    console.log('Welcome!  Fetching your information.... ');
+                    FB.api('/me', function(response) {
+                        console.log('Good to see you, ' + response.name + '.');
+                        username = response.name;
+                    });
+                } else {
+                    console.log('User cancelled login or did not fully authorize.');
+                }
+            });
+        })
+
+
+}
+
+function unlikePhoto(objectID, count) {
+    //ex ID: 816508248380643
+    var likeURL = "https://graph.facebook.com/" + objectID + "/likes?access_token=" + usertoken;
+
+
+    $.ajax({
+        url: likeURL,
+        type: 'DELETE',
+        success: function(result) {
+            console.log("unliked");
+            for (var i = 0; i < photos.length; i++) {
+                if (photos[i].id == objectID) {
+                    console.log(count);
+                if (count > 1) {
+                    photos[i].likes = photos[i].likes - 2;
+                    displayPhotos(photos);
+
+                } else {
+
+                    photos[i].likes = photos[i].likes - 1;
+                    displayPhotos(photos);
+                }
+                }
+            }
+        }
+    });
+
+}
+
+
+
+//Starts HERE: Gets the Album ID's requested, calls getAlbumPhotos
+function getAlbums() {
+
+
+    var albumsURL = "https://graph.facebook.com/v1.0/815157038515764/albums";
+    $.get(albumsURL, function (data) {
+        //Name = the album name
+
+        var arrayLength = data.data.length;
+
+        for (var i = 0; i < arrayLength; i++) {
+            if (data.data[i].name == "Heron Island") {
+                heronAlbumID = data.data[i].id;
+                getAlbumPhotos();
+            }
+
+        }
+    });
+
+}
+
+$(function() {
+    $("#fbLogoutID").click(function () {
+        FB.logout(function (response) {
+            console.log("user has been logged out");
+            document.getElementById('status').innerHTML =
+                'You have been logged out,  ';
+
+        });
+
+    });
+});
+
+
+//Gets the photos from requested albums.
+function getAlbumPhotos() {
+    //var albumPhotoObject = [];
+    var albumPhotosURL = "https://graph.facebook.com/v1.0/816508098380658/photos";
+
+    $.get(albumPhotosURL, function (data) {
+        var albumPhotoObject = {thumbnail: "", description: "", likes: "", id:"", largeURL: ""};
+
+        //console.log(albumPhotoArray);
+
+        for (var x = 0; x < data.data.length; x++) {
+
+            for (var j = 0; j < data.data[x].images.length; j++) {
+
+                if (data.data[x].images[j].height == 320) {
+
+                    if (data.data[x].hasOwnProperty("likes")) {
+
+                        albumPhotoObject = {thumbnail: data.data[x].images[j].source, description: data.data[x].name,likes: data.data[x].likes.data.length, id: data.data[x].id, largeURL:data.data[x].images[0].source};
+                    } else {
+
+                        albumPhotoObject = {thumbnail: data.data[x].images[j].source, description: data.data[x].name,likes: 0, id: data.data[x].id, largeURL:data.data[x].images[0].source};
+
+                    }
+                    if (albumPhotoObject.description == null) {
+                        albumPhotoObject.description = "No Description";
+                    } else {
+                    }
+                    photos.push(albumPhotoObject);
+
+                }
+
+
+            }
+        }
+
+
+        displayPhotos(photos);
+    });
+
+}
+
+function sortArrayAscending() {
+    var byLikes = photos.slice(0);
+    byLikes.sort(function(a,b) {
+        return a.likes - b.likes;
+    });
+    console.log('by likes asc:');
+    console.log(byLikes);
+
+    displayPhotos(byLikes);
+
+
+}
+
+function sortArrayDescending() {
+    var byLikes = photos.slice(0);
+    byLikes.sort(function(a,b) {
+        return b.likes - a.likes;
+    });
+    console.log('by likes desc:');
+    console.log(byLikes);
+    displayPhotos(byLikes);
+
+}
+
+function displayPhotos (displayPhotos) {
+
+
+    var thumbElement = document.getElementsByTagName('figure');
+    //console.log(thumbElement);
+    //var firstElement = thumbElement[0].innerHTML;
+    var htmlStr = "";
+    //could have just got the imageclasses instead of figure.
+    for (var i = 0; i < displayPhotos.length; i++) {
+
+        /*htmlStr += '<div class="images"> <figure> <a href="' + photos[i].largeURL +
+         '" data-lightbox="watches" data-title=' + photos[i].description + '><img src=' + photos[i].thumbnail + ' ' +
+         'alt=”Photo” width=150 height=150></a><figcaption>' + photos[i].description
+         + "<br> total likes " + photos[i].likes + "<div id='btnDelete'><input type='button' onclick ='unlikePhoto(id)'value='Like' id='btnDeleteID'></div>" + ' </figcaption></figure></div>'
+         //console.log(htmlStr);*/
+
+        /*htmlStr += '<div class="images"> <figure> <a href="' + photos[i].largeURL +
+         '" data-lightbox="watches" data-title=' + photos[i].description + '><img src=' + photos[i].thumbnail + ' ' +
+         'alt=”Photo” width=150 height=150></a><figcaption>' + photos[i].description
+         + "<br> total likes " + photos[i].likes + ' </figcaption></figure></div>'*/
+
+        htmlStr += '<div class="images"> <figure> <a href="' + displayPhotos[i].largeURL +
+            '" data-lightbox="watches" data-title=' + displayPhotos[i].description + '><img src=' + displayPhotos[i].thumbnail + ' ' +
+            'alt=”Photo” id=' + displayPhotos[i].id + ' width=150 height=150></a><figcaption>' + displayPhotos[i].description + "<br> total likes " + displayPhotos[i].likes + "<div class='btnDelete'><input type='button' value='Like' class='btnDeleteID'></div>" + ' </figcaption></figure></div>';
+        //console.log(htmlStr);
+
+
+        //<div class="fb-like" data-href="https://graph.facebook.com/" + photos[i].id + "/likes?access_token=" + usertoken+"" data-layout="standard" data-action="like" data-show-faces="true" data-share="false"></div>
+
+        //var likeURL = "https://graph.facebook.com/" + objectID + "/likes?access_token=" + usertoken;
+
+    }
+
+
+    var images = document.getElementsByClassName("imagesArea")[0];//classname returns multiple values; therefore need to
+    //get at the index desired.
+
+    images.innerHTML = htmlStr;
+
+
+    //}
+
+}
+
+
+// This is called with the results from from FB.getLoginStatus().
+function statusChangeCallback(response) {
+    console.log('statusChangeCallback');
+    console.log(response);
+    // The response object is returned with a status field that lets the
+    // app know the current login status of the person.
+    // Full docs on the response object can be found in the documentation
+    // for FB.getLoginStatus().
+    if (response.status === 'connected') {
+        usertoken = response.authResponse.accessToken;
+        // Logged into your app and Facebook.
+        testAPI();
+    } else if (response.status === 'not_authorized') {
+        // The person is logged into Facebook, but not your app.
+        document.getElementById('status').innerHTML = 'Please log ' +
+            'into this app.';
+    } else {
+        // The person is not logged into Facebook, so we're not sure if
+        // they are logged into this app or not.
+        document.getElementById('status').innerHTML = 'Please log ' +
+            'into Facebook.';
+        console.log("test");
+    }
+}
+
+// This function is called when someone finishes with the Login
+// Button.  See the onlogin handler attached to it in the sample
+// code below.
+function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+    });
+}
+
+window.fbAsyncInit = function() {
+    FB.init({
+        appId      : 796115627101259,
+        cookie     : true,  // enable cookies to allow the server to access
+        // the session
+        xfbml      : true,  // parse social plugins on this page
+        version    : 'v2.1' // use version 2.1
+    });
+
+    // Now that we've initialized the JavaScript SDK, we call
+    // FB.getLoginStatus().  This function gets the state of the
+    // person visiting this page and can return one of three states to
+    // the callback you provide.  They can be:
+    //
+    // 1. Logged into your app ('connected')
+    // 2. Logged into Facebook, but not your app ('not_authorized')
+    // 3. Not logged into Facebook and can't tell if they are logged into
+    //    your app or not.
+    //
+    // These three cases are handled in the callback function.
+
+    FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+    });
+
+};
+
+// Load the SDK asynchronously
+(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+// Here we run a very simple test of the Graph API after login is
+// successful.  See statusChangeCallback() for when this call is made.
+function testAPI() {
+    console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me', function(response) {
+        console.log('Successful login for: ' + response.name);
+        username = response.name;
+        document.getElementById('status').innerHTML =
+            'Thanks for logging in, ' + response.name + '!';
+    });
+}
+
+
+
+
+
+
+
+$(function() {
+    $("#btnGoBackID").click(function() {
+
+        $(".images").hide();
+        $("#splashscreen").fadeIn();
+        $("#searchFields").fadeOut();
+        $("#griffithLogo").fadeIn();
+        $("#sideBarMenu").fadeOut();
+
+
+
+
+    });
+});
+
+$(function() {
+    $("#buttonSpan").click(function() {
+        alert("Feature not available yet");
+    });
+});
+
+
+
+//splash screen fade out and
+$(function() {
+    $("#splashscreen").click(function() {
+        getAlbums();
+
+        $(".imagesArea").fadeIn();
+        // ^^ Change this if you want images to display straight away
+
+        $("#splashscreen").fadeOut();
+        $("#griffithLogo").fadeOut();
+        $("#searchFields").fadeIn();
+        $("#sideBarMenu").fadeIn();
+
+
+
+    });
+
+});
+
+

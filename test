@@ -1,0 +1,30 @@
+var numInput = document.getElementById('searchText').value;
+    if ((isNaN(numInput)) || (numInput == "")) {
+        alert("Please enter a number");
+    } else {
+
+        var thumbElement = document.getElementsByTagName('figure');
+        var firstElement = thumbElement[0].innerHTML;
+        var htmlStr = "";
+        //could have just got the imageclasses instead of figure.
+
+       for (var i = 0; i < numInput; i++) {
+
+            if (i % 2 == 0) {
+                htmlStr += '<div class="imagesBlack"><figure>' + firstElement + '</figure></div>';
+
+
+            }
+            else {
+                htmlStr += '<div class="images"><figure>' + firstElement + '</figure></div>';
+
+            }
+
+        }
+
+        var images = document.getElementsByClassName("imagesArea")[0];//classname returns multiple values; therefore need to
+        //get at the index desired.
+
+        images.innerHTML = htmlStr;
+
+        <--! This was the search Number thing -->
